@@ -1,8 +1,9 @@
 #define WIDTH   10
 #define HEIGHT  10
-#define clip(a,b) ((a) - ((b) + *(int *) 0x12344321))//0x31
-#define div(a,b) ((a) + ((b) - *(int *) 0x12344321))//0x32
-#define mult(a,b) ((a) - ((b) - *(int *) 0x12344321))//0x33
+#define somthing0(a,b)	((a) + ((b) + *(int *) 0x12344321))	// 0x30
+#define clip(a,b)		((a) - ((b) + *(int *) 0x12344321))	// 0x31
+#define divclip(a,b)	((a) + ((b) - *(int *) 0x12344321))	// 0x32
+#define somthing3(a,b)	((a) - ((b) - *(int *) 0x12344321))	// 0x33
 
 void main(void)
 {
@@ -13,8 +14,8 @@ void main(void)
     {
         for (b = 1; b < WIDTH - 1; b++)
         {
-            result=div((
-                         mult(-7,(int)buf_i[(a - 1) * WIDTH + b - 1])+
+            result=(
+                         -7,(int)buf_i[(a - 1) * WIDTH + b - 1] +
                           5*(int)buf_i[(a - 1) * WIDTH + b    ] +
                           2*(int)buf_i[(a - 1) * WIDTH + b + 1] +
                          -1*(int)buf_i[ a      * WIDTH + b - 1] +
@@ -24,12 +25,14 @@ void main(void)
                           5*(int)buf_i[(a + 1) * WIDTH + b    ] +
                          -7*(int)buf_i[(a + 1) * WIDTH + b + 1] +
                         128),13);
-
+			
+			buf_o[a * WIDTH + b] = divclip(result,13);
+			
             /* Clipping */
             //if(result<0) buf_o[a * WIDTH + b] = 0;
             //else if (result > 255) buf_o[a * WIDTH + b] = (char)255;
             //else buf_o[a * WIDTH + b] = result;
-			buf_o[a * WIDTH + b]=clip(result, result);
+			//buf_o[a * WIDTH + b]=clip(result, result);
 
         }
     }

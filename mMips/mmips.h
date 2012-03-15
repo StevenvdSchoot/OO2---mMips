@@ -102,21 +102,22 @@ SC_MODULE(mMIPS)
 
 	sc_signal< sc_bv<DWORD> 		> bus_alu_result;
 	sc_signal< sc_bv<DWORD> 		> bus_alu_result_2;
+	sc_signal< sc_bv<DWORD> 		> bus_alu_result_lo;
 	sc_signal< sc_bv<1> 			> bus_alu_zero;
 
 	sc_signal< sc_bv<DWORD>			> bus_register_hi;
 	sc_signal< sc_bv<DWORD>			> bus_register_lo;
 
 	sc_signal< sc_bv<DWORD> 		> bus_d_div;
-	sc_signal< sc_bv<1> 		> bus_hazard_div;
-	sc_signal< sc_bv<1> 		> bus_test2;
-	sc_signal< sc_bv<1> 		> bus_test;
+	sc_signal< sc_bv<1> 			> bus_hazard_div;
+	sc_signal< sc_bv<1> 			> bus_test2;
+	sc_signal< sc_bv<1> 			> bus_test;
 	sc_signal< sc_bv<DWORD> 		> bus_a_out;
 	sc_signal< sc_bv<DWORD> 		> bus_b_out;
 	sc_signal< sc_bv<DWORD> 		> bus_a_in;
 	sc_signal< sc_bv<DWORD> 		> bus_b_in;
-	sc_signal< sc_bv<6> 		> bus_iti_div;
-	sc_signal< sc_bv<6> 		> bus_ito_div;
+	sc_signal< sc_bv<6> 			> bus_iti_div;
+	sc_signal< sc_bv<6> 			> bus_ito_div;
 
 	sc_signal< sc_bv<DWORD> 		> bus_registers_1;
 	sc_signal< sc_bv<DWORD> 		> bus_registers_2;
@@ -701,6 +702,7 @@ SC_MODULE(mMIPS)
 		alu->d(bus_d_div);
 		alu->r(bus_alu_result);
 		alu->r2(bus_alu_result_2);
+		alu->LO(bus_alu_result_lo);
 		alu->z(bus_alu_zero);
 		alu->ctrl(bus_reg_aluctrl);
 		alu->alu_done(bus_hazard_div);
@@ -714,7 +716,7 @@ SC_MODULE(mMIPS)
 		hi->w(bus_id_ctrl_ex_hilo_write);
 		hi->clk(clk);
 		hi->rst(rst);
-		lo->in(bus_alu_result);
+		lo->in(bus_alu_result_lo);
 		lo->out(bus_register_lo);
 		lo->w(bus_id_ctrl_ex_hilo_write);
 		lo->clk(clk);

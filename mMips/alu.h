@@ -28,6 +28,7 @@ SC_MODULE(ALU) {
 	sc_in< 	sc_bv<DWORD> >		d;		// remainder
 	sc_out<	sc_bv<DWORD> >		r;		// Result
 	sc_out<	sc_bv<DWORD> >		r2;		// Result (hi 32b output, 64b results)
+	sc_out<	sc_bv<DWORD> >		LO;		// Result
 	sc_out< sc_bv<1> >			z;		// Zero (one in case result equal zero)
 	sc_out< sc_bv<1> >			alu_done;// hazard divide
 	sc_in< 	sc_bv<6> >			iin;	// iteration in

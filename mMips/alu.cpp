@@ -50,10 +50,12 @@ void ALU::alu()
 	switch (ctrl_t) {
 		case 0x0:	// And
 					result = s & t;
+					r.write(result);
 					break;
 
 		case 0x1:	// Or
 					result = s | t;
+					r.write(result);
 					break;
 
 		case 0x2:	// Add
@@ -65,6 +67,7 @@ void ALU::alu()
 					else
 						zero = 0;
 					z.write(zero);
+					r.write(result);
 					break;
 
 		case 0x3:	// Add unsigned
@@ -75,10 +78,12 @@ void ALU::alu()
 					else
 						zero = 0;
 					z.write(zero);
+					r.write(result);
 					break;
 
 		case 0x4:	// Xor
 					result = s ^ t;
+					r.write(result);
 					break;
 
 		case 0x6:	// Subtract unsigned
@@ -89,6 +94,7 @@ void ALU::alu()
 					else
 						zero = 0;
 					z.write(zero);
+					r.write(result);
 					break;
 
 		case 0x7:	// Set-on-less-than
@@ -102,6 +108,7 @@ void ALU::alu()
 						else
 							zero = 0;
 					z.write(zero);
+					r.write(result);
 					break;
 
 		case 0x8:	// Set-on-less-than unsigned
@@ -115,52 +122,63 @@ void ALU::alu()
 						else
 							zero = 0;
 						z.write(zero);
+					r.write(result);
 					break;
 
 		case 0x9:	// Load upper immediate
 					result = t << 16;
+					r.write(result);
 					break;
 
 		case 0xA:	// SLL (1 bit)
 					result = t << 1;
+					r.write(result);
 					break;
 
 		case 0xB:	// SLL (2 bit)
 					result = t << 2;
+					r.write(result);
 					break;
 
 		case 0xC:	// SLL (8 bit)
 					result = t << 8;
+					r.write(result);
 					break;
 
 		case 0xD:	// SRL (1 bit)
 					result = t >> 1;
+					r.write(result);
 					break;
 
 		case 0xE:	// SRL (2 bit)
 					result = t >> 2;
+					r.write(result);
 					break;
 
 		case 0xF:	// SRL (8 bit)
 					result = t >> 8;
+					r.write(result);
 					break;
 
 		case 0x10:	// SRA (1 bit)
 					sign = t.range(DWORD-1,DWORD-1);
 					result = t >> 1;
 					result.range(DWORD-1,DWORD-1) = sign;
+					r.write(result);
 					break;
 
 		case 0x11:	// SRA (2 bit)
 					sign = t.range(DWORD-1,DWORD-1);
 					result = t >> 2;
 					result.range(DWORD-1,DWORD-2) = (sign, sign);
+					r.write(result);
 					break;
 
 		case 0x12:	// SRA (8 bit)
 					sign = t.range(DWORD-1,DWORD-1);
 					result = t >> 8;
 					result.range(DWORD-1,DWORD-8) = (sign, sign, sign, sign, sign, sign, sign, sign);
+					r.write(result);
 					break;
 
         case 0x13:  // Multu
@@ -168,6 +186,8 @@ void ALU::alu()
 					result = c.range(DWORD-1,0);
 					result_hi = c.range(63, DWORD);
 					r2.write(result_hi);
+					LO.write(result);
+					r.write(0);
                     break;
 		case 0x14:  //Clipping
                     if(t_int<0)
@@ -176,6 +196,7 @@ void ALU::alu()
 						result=255;
 					else 
 						result=t_int;
+					r.write(result);
                     break;
 		case 0x15:  //Divide
 					it_in=iin.read();
@@ -206,6 +227,8 @@ void ALU::alu()
 						hazard=0;
 					}
 					iout.write(it_out);
+					LO.write(result);
+					r.write(0);
                     break;
 		case 0x16:  //Add +1 or -1
 			        c = sc_int<64>(s) * sc_int<64>(t);
@@ -213,10 +236,10 @@ void ALU::alu()
 					result_hi = c.range(63, DWORD);
 					r2.write(result_hi);
 					r2.write(result_hi);
+					r.write(result);
                     break;
 	}
 
 	// Write results to output
 	alu_done.write(hazard);
-	r.write(result);
 }
